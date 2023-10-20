@@ -5,6 +5,13 @@ const itemFilter = document.getElementById('filter')
 const clearBtn = document.getElementById('clear')
 
 
+function displayItems(){
+    const itemsFromStorage = getItemsFromStorage()
+    itemsFromStorage.forEach(item => addItemToDOM(item))
+    checkUI()
+}
+
+
 function onAddItemSubmit(e){
     e.preventDefault()
     
@@ -40,22 +47,7 @@ function addItemToDOM(item){
     itemList.appendChild(li)
 }
 
-function addItemToStorage(item){
-    let itemsFromStorage;
-    
-    if(localStorage.getItem('items') === null){
-        itemsFromStorage = [];
 
-    } else{
-        itemsFromStorage = JSON.parse(localStorage.getItem('items'));
-    }
-
-    //Add new item to Array
-    itemsFromStorage.push(item);
-
-    //Convert to JSON String and set to LocalStorage
-    localStorage.setItem('items', JSON.stringify(itemsFromStorage));
-}
 
 
 function createButton(classes){
@@ -71,6 +63,31 @@ function createIcon(classes){
     icon.className = classes;
     return icon;
 }
+
+
+function addItemToStorage(item){
+    const itemsFromStorage = getItemsFromStorage();
+
+    //Add new item to Array
+    itemsFromStorage.push(item);
+
+    //Convert to JSON String and set to LocalStorage
+    localStorage.setItem('items', JSON.stringify(itemsFromStorage));
+}
+
+function getItemsFromStorage(){
+    let itemsFromStorage;
+    
+    if(localStorage.getItem('items') === null){
+        itemsFromStorage = [];
+
+    } else{
+        itemsFromStorage = JSON.parse(localStorage.getItem('items'));
+    }
+
+    return itemsFromStorage
+}
+
 
 /*
 The eventListener will be added on the parent, and using TARGET to identify the item we will delete
@@ -137,12 +154,18 @@ function checkUI(){
 }
 
 
+//Initialize app
 
+function init(){
+    //Event Listeners
+    itemForm.addEventListener('submit', onAddItemSubmit)
+    itemList.addEventListener('click', removeItem)
+    clearBtn.addEventListener('click', clearItems)
+    itemFilter.addEventListener('input', filterItems)
+    document.addEventListener('DOMContentLoaded', displayItems)
+    
+    checkUI()
+}
 
-//Event Listeners
-itemForm.addEventListener('submit', onAddItemSubmit)
-itemList.addEventListener('click', removeItem)
-clearBtn.addEventListener('click', clearItems)
-itemFilter.addEventListener('input', filterItems)
+init()
 
-checkUI()
