@@ -1,9 +1,9 @@
 const itemForm = document.getElementById('item-form');
 const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
-const itemFilter = document.getElementById('filter')
-const clearBtn = document.getElementById('clear')
-const formBtn = itemForm.querySelector('button')
+const itemFilter = document.getElementById('filter');
+const clearBtn = document.getElementById('clear');
+const formBtn = itemForm.querySelector('button');
 let isEditMode = false;
 
 
@@ -23,6 +23,19 @@ function onAddItemSubmit(e){
     if(newItem === ''){
         alert('Please add an item')
         return
+    }
+
+    //Check for edit mode
+    if(isEditMode){
+        const itemToEdit = itemList.querySelector('.edit-mode');
+
+        removeItemFromStorage(itemToEdit.textContent);
+
+        itemToEdit.classList.remove('edit-mode');
+
+        itemToEdit.remove();
+
+        isEditMode = false;
     }
 
     //Create DOM element
@@ -172,6 +185,8 @@ function filterItems(e){
 
 
 function checkUI(){
+    itemInput.value = ''
+
     const items = itemList.querySelectorAll('li');
     if(items.length === 0){
         clearBtn.style.display = 'none'
@@ -180,6 +195,11 @@ function checkUI(){
         clearBtn.style.display = 'block'
         itemFilter.style.display = 'block'
     }
+
+    formBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`; 
+    formBtn.style.backgroundColor = '#333'
+
+    isEditMode = false;
 }
 
 
