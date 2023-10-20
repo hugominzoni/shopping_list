@@ -36,6 +36,11 @@ function onAddItemSubmit(e){
         itemToEdit.remove();
 
         isEditMode = false;
+    } else{
+        if (checkIfItemExists(newItem)){
+            alert('Item already exists!')
+            return
+        }
     }
 
     //Create DOM element
@@ -119,6 +124,15 @@ function onClickItem(e){
         setItemToEdit(e.target);
     }
 }
+
+function checkIfItemExists(item){
+    const itemsFromStorage = getItemsFromStorage()
+    return itemsFromStorage.includes(item);
+}
+
+
+
+
 
 function setItemToEdit(item){
     isEditMode = true;
